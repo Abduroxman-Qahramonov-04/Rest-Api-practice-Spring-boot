@@ -1,4 +1,4 @@
-package com.example.restApiPractice;
+package com.example.restApiPractice.helloWorldPractice;
 
 public class HelloObject {
     String message;

@@ -1,4 +1,4 @@
-package com.example.restApiPractice;
+package com.example.restApiPractice.helloWorldPractice;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
