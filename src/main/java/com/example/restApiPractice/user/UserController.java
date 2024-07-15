@@ -1,5 +1,6 @@
 package com.example.restApiPractice.user;
 
+import com.example.restApiPractice.exceptions.UserNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -19,13 +20,14 @@ public class UserController {
     }
     @GetMapping("/users/{id}")
     public User retrieveUserById(@PathVariable Integer id){
-        return userDaoService.findById(id);
+        User user = userDaoService.findById(id);
+        if(user==null) throw  new UserNotFoundException("User not found with id:"+id);
+        return user;
     }
     @PostMapping("/users")
     public ResponseEntity<User> addUser(@RequestBody User user){
         User user1 = userDaoService.addUser(user);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user1.getId()).toUri();
-
         return ResponseEntity.created(location).build();
     }
 }
