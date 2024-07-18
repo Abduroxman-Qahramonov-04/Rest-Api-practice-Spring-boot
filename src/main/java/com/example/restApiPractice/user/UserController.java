@@ -2,9 +2,12 @@ package com.example.restApiPractice.user;
 
 import com.example.restApiPractice.exceptions.UserNotFoundException;
 import jakarta.validation.Valid;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 import java.net.URI;
 import java.util.List;
@@ -20,10 +23,13 @@ public class UserController {
         return this.userDaoService.findAll();
     }
     @GetMapping("/users/{id}")
-    public User retrieveUserById(@PathVariable Integer id){
+    public EntityModel<User> retrieveUserById(@PathVariable Integer id){
         User user = userDaoService.findById(id);
         if(user==null) throw  new UserNotFoundException("User not found with id:"+id);
-        return user;
+        EntityModel<User> entityModel = EntityModel.of(user);
+        WebMvcLinkBuilder link = linkTo(methodOn(this.getClass()).retrieveAllUsers());
+        entityModel.add(link.withRel("all-users"));
+        return entityModel;
     }
     @DeleteMapping("/users/{id}")
     public ResponseEntity<User> deleteUserById(@PathVariable Integer id){
