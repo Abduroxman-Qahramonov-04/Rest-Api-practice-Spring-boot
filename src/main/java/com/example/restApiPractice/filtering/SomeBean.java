@@ -1,12 +1,14 @@
 package com.example.restApiPractice.filtering;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 //@JsonIgnoreProperties({"field1","field2"}) - you can also control over the class
+@JsonFilter("SomeBeanFilter")
 public class SomeBean {
     private String field1;
-    @JsonIgnore
+    //@JsonIgnore
     private String field2;
     private String field3;
 
