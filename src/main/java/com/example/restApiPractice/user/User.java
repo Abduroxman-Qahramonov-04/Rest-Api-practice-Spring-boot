@@ -12,12 +12,13 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 @Entity(name = "user_details")
 public class User {
+
     @Id
     @GeneratedValue
     private Integer id;
     @Size(min = 2, message = "name should have at least 2 characters")
     //filtering
-    @JsonProperty("user_name")
+    //@JsonProperty("user_name")
     private String name;
     @Past(message = "Birth date should be in the past")
     private LocalDate birthDate;
@@ -26,6 +27,9 @@ public class User {
         this.id = id;
         this.name = name;
         this.birthDate = birthDate;
+    }
+    public User(){
+
     }
 
     public Integer getId() {
