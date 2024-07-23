@@ -68,14 +68,19 @@ public class UserJpaResource {
         return ResponseEntity.created(location).build();
     }
 
-//    @GetMapping("/jpa/users/{id}/posts/{postId}")
-//    public Post retrievePostById(@PathVariable Integer id,@PathVariable Integer postId){
-//        Optional<User> user = repository.findById(id);
-//        if(user.isEmpty()) throw  new UserNotFoundException("User not found with id:"+id);
-//        EntityModel<User> entityModel = EntityModel.of(user.get());
-//        WebMvcLinkBuilder link = linkTo(methodOn(this.getClass()).retrieveAllUsers());
-//        entityModel.add(link.withRel("all-users"));
-//
-//        return entityModel;
-//    }
+    @GetMapping("/jpa/users/{id}/posts/{postId}")
+    public EntityModel<Post> retrievePostById(@PathVariable Integer id, @PathVariable Integer postId){
+        Optional<User> user = repository.findById(id);
+        if(user.isEmpty()) throw  new UserNotFoundException("User not found with id:"+id);
+        Optional<Post> post = postRepository.findById(postId);
+        if(post.isEmpty() || !post.get().getUser().getId().equals(id)) throw new UserNotFoundException("Post not found with id: " + postId + " for user id: " + id);
+
+        EntityModel<Post> entityModel = EntityModel.of(post.get());
+        WebMvcLinkBuilder userLink = linkTo(methodOn(this.getClass()).retrieveUserById(id));
+        WebMvcLinkBuilder postLink = linkTo(methodOn(this.getClass()).retrievePostsForUser(postId));
+        entityModel.add(userLink.withRel("user"));
+        entityModel.add(postLink.withRel("user-posts"));
+
+        return entityModel;
+    }
 }
